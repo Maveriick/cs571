@@ -1,0 +1,202 @@
+
+
+<html>
+  <head>
+    <style type="text/css">
+      #box {
+        position:absolute;
+        top:25%;
+        right:25%;
+        bottom:25%;
+        left:25%;
+        padding:25px;
+        margin:25px;
+      }
+      
+      .boxclass{
+        margin: 0 auto;
+        margin-left: auto;
+        margin-right: auto;
+        text-align:center;
+      }
+      
+      #box p{
+        text-align:center;
+      }
+      table{
+        
+        width: 200px;
+        margin-left: auto;
+        margin-right: auto;
+        
+      }
+      p{
+        text-align:center;
+      }
+      .displayDiv{
+        margin:30%;
+        position:absolute;
+        
+      }
+    </style>
+	
+      <script type="text/javascript">
+        var xmlDoc;
+        function displayXML(xmlReturned){
+          
+          var plants = xmlDoc.getElementsByTagName("PLANT");
+          
+          if(plants.length === 0){
+            alert("No. plants in xml file");
+            return false;
+          }
+          
+          
+          
+          document.clear();
+          
+          document.write('<table id="disp" border="1" cellpadding="5" style="width:90%; margin:auto">');
+          document.write('<tr>');
+          document.write('<th>COMMON</th>');
+          document.write('<th>BOTANICAL</th>');
+          document.write('<th>ZONE</th>');
+          document.write('<th>LIGHT</th>');
+          document.write('<th>PRICE</th>');
+          document.write('<th>IMAGE</th>');
+          document.write('</tr>');
+          for(var z = 0;z < plants.length;z++){
+            document.write('<tr>');
+            document.write('<td>' + plants[z].getElementsByTagName("COMMON")[0].childNodes[0].nodeValue +'</td>');
+            document.write('<td>' + plants[z].getElementsByTagName("BOTANICAL")[0].childNodes[0].nodeValue +'</td>');
+            document.write('<td>' + plants[z].getElementsByTagName("ZONE")[0].childNodes[0].nodeValue +'</td>');
+            document.write('<td>' + plants[z].getElementsByTagName("LIGHT")[0].childNodes[0].nodeValue +'</td>');
+            document.write('<td>' + plants[z].getElementsByTagName("PRICE")[0].childNodes[0].nodeValue +'</td>');
+            document.write('<td>');
+            document.write( "<img src= " + plants[z].getElementsByTagName("IMAGE")[0].childNodes[0].nodeValue + " width='250' height = '200' alt = " + plants[z].getElementsByTagName("IMAGE")[0].childNodes[0].nodeValue + " />" );
+            document.write('</td>');
+            document.write('</tr>');
+          }
+          document.write('</table>');
+          
+          
+          var popup = window.open("", "", "width=1200,height=800,resizeable,scrollbars"),
+              table = document.getElementById("disp");
+          
+          popup.document.write(table.outerHTML);
+          document.body.innerHTML = '';
+          popup.document.close();
+          if (window.focus) 
+            popup.focus();
+          
+          
+          
+        }
+        
+        
+        function loadXML(inputUrl){
+          if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari 
+            xmlhttp=new XMLHttpRequest();
+            
+          }
+          else {// code for IE6, IE5 
+            xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+            
+          }
+          
+          
+          xmlhttp.open("GET",inputUrl,false);
+          //open, send, responseXML are
+          xmlhttp.onreadystatechange = function (checkFile) {
+            
+            if (xmlhttp.readyState == 4){
+              
+              if (xmlhttp.status == 200){
+                
+                
+                
+              }
+              else{
+                alert("File does not exist!");
+                return false;
+              }
+              
+            }
+          }
+            
+            
+            xmlhttp.send();
+          //properties of XMLHTTPRequest 
+          xmlDoc=xmlhttp.responseXML;
+          return xmlDoc;
+          
+          
+        }
+        
+        
+        function validateXML(xmlDoc){
+          if (window.ActiveXObject){
+            //if IE, simply execute script (due to async prop).
+            alert("reached");
+            if (xmlDoc.parseError.errorCode != 0) {
+              var myErr = xmlDoc.parseError;
+              alert(myErr);
+            }
+            else {
+              
+              generateHTML(xmlDoc);
+              alert("success");
+            }
+          }
+          else{
+            if(xmlDoc.documentElement.nodeName==="parsererror"){
+              alert("Invalid xml file");
+              return false;
+            }
+            else	{
+              displayXML(xmlDoc);
+            }
+            
+          }
+        }
+        
+        
+        
+        function inputHelper(){
+          
+          var inputUrl = document.getElementById("inputURL").value;
+          console.log(inputUrl);
+          if(inputUrl.match(/^\s*$/)){
+            alert("Please Enter URL of the XML File");
+          }
+          else{
+            var xmlReturned = loadXML(inputUrl);
+            validateXML(xmlReturned);
+          }
+        }
+		
+      </script>
+      <title>
+        Homework #4 
+      </title>
+  </head>
+  <body>
+    <div id="box">
+      <p>
+        Enter URL for Plant Catalog XML File
+      </p>
+      <div class ="boxclass">
+        <input type="text" id="inputURL" size="40" />
+        
+        <br/>
+        
+        <br/>
+        <input type="button" id="submit" value="Submit Query" onclick="inputHelper()"/>
+      </div>
+    </div>
+	
+      <noscript>
+        <div style="display: block; font-family: Verdana, Geneva, Arial; font-size: 10px">
+          
+        </div>
+      </body>
+  </html>
